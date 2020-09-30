@@ -42,9 +42,9 @@ let lives = 3
 document.addEventListener("keydown", keyDownHandler, false)
 document.addEventListener("keyup", keyUpHandler, false)
 
-let interval = setInterval(buildCanvas, 10)
+buildCanvas()
 
-function buildCanvas(){
+function buildCanvas(timestamp){
    ctx.clearRect(0, 0, canvas.width, canvas.height)
    drawBricks()
    drawPaddle()
@@ -55,6 +55,23 @@ function buildCanvas(){
    x += dx
    y += dy
    collisionDetect()
+   let request
+   if(!gamePaused){
+     request = requestAnimationFrame(buildCanvas)
+   } else {
+      cancelAnimationFrame(request)
+      gamePaused = true
+   }
+   
+}
+
+function pause(){
+   if(!gamePaused){
+      gamePaused = true
+   } else {
+      gamePaused = false
+      buildCanvas()
+   }
 }
 
 function keyDownHandler(e){
@@ -145,7 +162,7 @@ function lifeLost(){
    if(!lives){
       alert("No lives remaining! Play again?")
       document.location.reload()
-      clearInterval(interval)
+      // clearInterval(interval)
    } else {
       x = canvas.width/2
       y = canvas.height-20
@@ -167,7 +184,7 @@ function brickCollisions(){
                if(score === brickColCount * brickRowCount){
                   alert("You Win! Play again?")
                   document.location.reload()
-                  clearInterval(interval)
+                  // clearInterval(interval)
                }
             }   
          }
@@ -187,15 +204,7 @@ function updateLives(){
    ctx.fillText("Lives left: " + lives, 20, 370)
 }
 
-function pause(){
-   if(!gamePaused){
-      clearInterval(interval)
-      gamePaused = true
-   } else {
-      interval = setInterval(buildCanvas, 10)
-      gamePaused = false
-   }
-}
+
 
 
 
