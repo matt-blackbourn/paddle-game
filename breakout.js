@@ -12,14 +12,14 @@ let paddleY = canvas.height - paddleHeight
 let ballRadius = 10
 let x = canvas.width/2
 let y = canvas.height-20
-let dx = 2
-let dy = -2
+let dx = 4
+let dy = -4
 
 //bricks setup
-let brickRowCount = 8
+let brickRowCount = 7
 let brickColCount = 11
 let brickWidth = 35
-let brickHeight = 15
+let brickHeight = 20
 let brickGap = 5
 let leftOffset = 20
 let topOffset = 20
@@ -62,7 +62,6 @@ function buildCanvas(timestamp){
       cancelAnimationFrame(request)
       gamePaused = true
    }
-   
 }
 
 function pause(){
@@ -157,34 +156,31 @@ function collisionDetect(){
    brickCollisions() 
 }
 
-function lifeLost(){
-   lives --
-   if(!lives){
-      alert("No lives remaining! Play again?")
-      document.location.reload()
-      // clearInterval(interval)
-   } else {
-      x = canvas.width/2
-      y = canvas.height-20
-      dx = 2
-      dy = -2
-      paddleX = canvas.width/2 - paddleWidth/2
-   }
-}
-
 function brickCollisions(){
    for(let r = 0; r < bricks.length; r++){
       for(let c = 0; c < bricks[r].length; c++){
          let b = bricks[r][c]
          if(b.status > 0){
-            if(x > b.x - ballRadius && x < b.x + ballRadius + brickWidth && y > b.y - ballRadius && y < b.y + brickHeight + ballRadius){
+            // test if ball is touching brick
+            if(x + dx > b.x - ballRadius 
+            && x + dx < b.x + ballRadius + brickWidth 
+            && y + dy > b.y - ballRadius 
+            && y + dy < b.y + brickHeight + ballRadius){
+               //test which edge is closest to ball
+               if(y > b.y + brickHeight){
+                  dy = -dy
+               } else if(y < b.y){
+                  dy = -dy
+               } else if(x > b.x + brickWidth){
+                  dx = -dx
+               } else if(x < b.x){
+                  dx = -dx
+               }
                b.status --
                if(b.status === 0) score ++
-               dy = -dy
                if(score === brickColCount * brickRowCount){
                   alert("You Win! Play again?")
                   document.location.reload()
-                  // clearInterval(interval)
                }
             }   
          }
@@ -192,17 +188,31 @@ function brickCollisions(){
    }
 }
 
-function updateScore(){
-   ctx.font = "16px Arial"
-   ctx.fillStyle = "black"
-   ctx.fillText("Score: " + score, 20, 350)
-}   
+function lifeLost(){
+   lives --
+   if(!lives){
+      alert("No lives remaining! Play again?")
+      document.location.reload()
+   } else {
+      x = canvas.width/2
+      y = canvas.height-20
+      dx = 4
+      dy = -4
+      paddleX = canvas.width/2 - paddleWidth/2
+   }
+}
 
 function updateLives(){
    ctx.font = "16px Arial"
    ctx.fillStyle = "black"
    ctx.fillText("Lives left: " + lives, 20, 370)
 }
+
+function updateScore(){
+   ctx.font = "16px Arial"
+   ctx.fillStyle = "black"
+   ctx.fillText("Score: " + score, 20, 350)
+}   
 
 
 
