@@ -33,31 +33,16 @@ for(let r = 0; r < brickRowCount; r++){
    }
 }
 
-//user input monitoring
 let leftPressed = false
 let rightPressed = false
-
 let gamePaused = false
 let score = 0
 let lives = 3
 
 document.addEventListener("keydown", keyDownHandler, false)
 document.addEventListener("keyup", keyUpHandler, false)
-// buildCanvas()
-
 
 let interval = setInterval(buildCanvas, 10)
-
-function pause(){
-   if(!gamePaused){
-      clearInterval(interval)
-      gamePaused = true
-   } else {
-      interval = setInterval(buildCanvas, 10)
-      gamePaused = false
-   }
-   
-}
 
 function buildCanvas(){
    ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -146,29 +131,31 @@ function movePaddle(){
 }
 
 function collisionDetect(){
-   //wall/paddle collisions
    if(x > canvas.width - ballRadius || x < ballRadius) dx = -dx
    if(y < ballRadius){
       dy = -dy 
    } else if (y > paddleY - ballRadius){
-      if(x > paddleX && x < paddleX + paddleWidth){
-         dy = -dy
-      } else {
-         lives --
-         if(!lives){
-            alert("game over")
-            document.location.reload()
-            clearInterval(interval)
-         } else {
-            x = canvas.width/2
-            y = canvas.height-20
-            dx = 2
-            dy = -2
-            paddleX = canvas.width/2 - paddleWidth/2
-         }
-      } 
+      x > paddleX && x < paddleX + paddleWidth ? dy = -dy : lifeLost()
    }
-   //brick collisions
+   brickCollisions() 
+}
+
+function lifeLost(){
+   lives --
+   if(!lives){
+      alert("No lives remaining! Play again?")
+      document.location.reload()
+      clearInterval(interval)
+   } else {
+      x = canvas.width/2
+      y = canvas.height-20
+      dx = 2
+      dy = -2
+      paddleX = canvas.width/2 - paddleWidth/2
+   }
+}
+
+function brickCollisions(){
    for(let r = 0; r < bricks.length; r++){
       for(let c = 0; c < bricks[r].length; c++){
          let b = bricks[r][c]
@@ -200,7 +187,15 @@ function updateLives(){
    ctx.fillText("Lives left: " + lives, 20, 370)
 }
 
-
+function pause(){
+   if(!gamePaused){
+      clearInterval(interval)
+      gamePaused = true
+   } else {
+      interval = setInterval(buildCanvas, 10)
+      gamePaused = false
+   }
+}
 
 
 
