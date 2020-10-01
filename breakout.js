@@ -79,6 +79,8 @@ function keyDownHandler(e){
       leftPressed = true
    } else if(e.keyCode === 39){
       rightPressed = true
+   } else if(e.keyCode === 32){
+      pause()
    }
 }
 
