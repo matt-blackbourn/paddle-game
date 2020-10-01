@@ -214,6 +214,7 @@ function updateScore(){
 }   
 
 //this comment does nothing
+//nor does this one
 
 
 
