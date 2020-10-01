@@ -16,13 +16,13 @@ let dx = 4
 let dy = -4
 
 //bricks setup
-let brickRowCount = 7
-let brickColCount = 11
+let brickRowCount = 5
+let brickColCount = 10
 let brickWidth = 35
 let brickHeight = 20
 let brickGap = 5
-let leftOffset = 20
-let topOffset = 20
+let leftOffset = 40
+let topOffset = 50
 
 //build bricks 2D array
 let bricks = []
@@ -55,6 +55,7 @@ function buildCanvas(timestamp){
    x += dx
    y += dy
    collisionDetect()
+   //Animation frame recursive call
    let request
    if(!gamePaused){
      request = requestAnimationFrame(buildCanvas)
@@ -166,14 +167,10 @@ function brickCollisions(){
             && x + dx < b.x + ballRadius + brickWidth 
             && y + dy > b.y - ballRadius 
             && y + dy < b.y + brickHeight + ballRadius){
-               //test which edge is closest to ball
-               if(y > b.y + brickHeight){
+               //test which edge is closest before touch happens
+               if(y > b.y + brickHeight || y < b.y){
                   dy = -dy
-               } else if(y < b.y){
-                  dy = -dy
-               } else if(x > b.x + brickWidth){
-                  dx = -dx
-               } else if(x < b.x){
+               } else if(x > b.x + brickWidth || x < b.x){
                   dx = -dx
                }
                b.status --
