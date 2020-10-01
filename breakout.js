@@ -213,7 +213,7 @@ function updateScore(){
    ctx.fillText("Score: " + score, 20, 350)
 }   
 
-
+//this comment does nothing
 
 
 
